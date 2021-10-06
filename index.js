@@ -51,12 +51,13 @@ app.get('/api/info', (request, response) => {
     <p>${date}</p>`)
 })
 
-//If an entry for the given id is not found, the server has to respond with the appropriate status code
+
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const person = persons.find(note => note.id === id)
     persons = persons.filter(person => person.id !== id)
 
+    //If an entry for the given id is not found, the server has to respond with the appropriate status code *ADDED THIS FROM WRONG TASK BUT IT WORKS SO...
     if (person) {
       response.status(204).end()
     } else {
@@ -64,6 +65,32 @@ app.delete('/api/persons/:id', (request, response) => {
     }
   })
 
+  const generateId = () => {
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
+      : 0
+    return maxId + 1
+  }
+  
+  app.post('/api/persons', (request, response) => {
+    const body = request.body
+  
+    if (!body.name) {
+      return response.status(400).json({ 
+        error: 'content missing' 
+      })
+    }
+  
+    const person = {
+      id: generateId(),
+      name: body.name,
+      number: body.number,
+    }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
+  })
 
 // app.get('/api/notes/:id', (request, response) => {
 //   const id = Number(request.params.id)
