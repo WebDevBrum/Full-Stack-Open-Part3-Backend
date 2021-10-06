@@ -51,6 +51,20 @@ app.get('/api/info', (request, response) => {
     <p>${date}</p>`)
 })
 
+//If an entry for the given id is not found, the server has to respond with the appropriate status code
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(note => note.id === id)
+    persons = persons.filter(person => person.id !== id)
+
+    if (person) {
+      response.status(204).end()
+    } else {
+      response.status(404).end()
+    }
+  })
+
+
 // app.get('/api/notes/:id', (request, response) => {
 //   const id = Number(request.params.id)
 //   const note = notes.find(note => note.id === id)
