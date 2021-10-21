@@ -1,3 +1,6 @@
+//DEMO CODE NOT USED IN FUNCTIONAL APP
+
+
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
@@ -23,6 +26,7 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
+//GET PERSONS
 if (process.argv.length < 4) {
   console.log('phonebook:');
   Person
@@ -34,6 +38,7 @@ if (process.argv.length < 4) {
       mongoose.connection.close()
   })
 }
+//create person
 if (process.argv.length >= 4) {
   const person = new Person({
     name: personNameArg,
