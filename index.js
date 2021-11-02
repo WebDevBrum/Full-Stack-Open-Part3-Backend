@@ -97,7 +97,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
   
     if (body.name === undefined) {
@@ -110,8 +110,9 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
   
     person.save().then(savedPerson => {
-      response.json(savedPerson)
+      response.json(savedPerson.toJSON())
     })
+    .catch(error => next(error))
   })
 
   app.get('/api/persons/:id', (request, response, next) => {
@@ -175,7 +176,9 @@ app.get('/api/persons/:id', (request, response, next) => {
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    }
     //In all other error situations, the middleware passes the error forward to the default Express error handler.
     next(error)
   }
